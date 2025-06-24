@@ -59,9 +59,9 @@ function App() {
     }
 
     const payload = {
-      "produtoId": product.id,
-      "carrinhoId": cart.id,
-      "quantidade_produto_adicionada": 1
+      produtoId: product.id,
+      carrinhoId: cart.id,
+      quantidade: 1,
     };
 
     const requestOptions = {

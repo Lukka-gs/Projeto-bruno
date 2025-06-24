@@ -71,7 +71,13 @@ export default function ShoppingCart({ cart, onRemoveItem }) {
 
   const calculateTotal = () => {
     if (!cartItems || cartItems.length === 0) return '0.00';
-    return cartItems.reduce((accumulator, item) => accumulator + (item.produto.preco * item.quantidade_produto_adicionada), 0).toFixed(2);
+    return cartItems
+      .reduce(
+        (accumulator, item) =>
+          accumulator + Number(item.produto.preco) * item.quantidade,
+        0,
+      )
+      .toFixed(2);
   };
 
   useEffect(() => {
@@ -111,10 +117,10 @@ export default function ShoppingCart({ cart, onRemoveItem }) {
               <ListItem>
                 <ListItemText
                   primary={<Typography variant="h6">{item.produto.nome}</Typography>}
-                  secondary={`R$ ${item.produto.preco.toFixed(2)} x ${item.quantidade_produto_adicionada}`}
+                  secondary={`R$ ${Number(item.produto.preco).toFixed(2)} x ${item.quantidade}`}
                 />
                 <Typography variant="body1" sx={{ minWidth: '80px', textAlign: 'right' }}>
-                  R$ {(item.produto.preco * item.quantidade_produto_adicionada).toFixed(2)}
+                  R$ {(Number(item.produto.preco) * item.quantidade).toFixed(2)}
                 </Typography>
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveFromCart(item.id)}>

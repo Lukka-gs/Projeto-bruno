@@ -33,6 +33,23 @@ function App() {
       });
   };
 
+  const fetchShoppingCart = (cartId) => {
+    fetch(`http://localhost:3001/carrinho-de-compras/${cartId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Falha ao obter carrinho');
+        }
+        return response.json();
+      })
+      .then(data => setCart(data))
+      .catch(error => {
+        console.error('Erro ao obter carrinho:', error);
+        setSnackbarMessage('Erro ao atualizar o carrinho.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      });
+  };
+
   const handleAddToCartApp = (product) => {
     if (!cart || !cart.id) {
       setSnackbarMessage('Carrinho não inicializado. Tente novamente.');
@@ -62,8 +79,8 @@ function App() {
         }
         return response.json();
       })
-      .then(updatedCartItem => {
-        createShoppingCart();
+      .then(() => {
+        fetchShoppingCart(cart.id);
         setSnackbarMessage(`"${product.nome}" adicionado ao carrinho!`);
         setSnackbarSeverity('success');
         setSnackbarOpen(true);
@@ -96,7 +113,7 @@ function App() {
         return response.text().then(text => text ? JSON.parse(text) : {});
       })
       .then(() => {
-        createShoppingCart();
+        fetchShoppingCart(cart.id);
         setSnackbarMessage('Item removido do carrinho.');
         setSnackbarSeverity('success');
         setSnackbarOpen(true);

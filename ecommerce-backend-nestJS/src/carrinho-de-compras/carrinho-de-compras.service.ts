@@ -36,6 +36,11 @@ export class CarrinhoDeComprasService {
     return this.findOne(id);
   }
 
+  async finalize(id: number) {
+    await this.carrinhoRepo.update(id, { status: 'finalizado' });
+    return this.findOne(id);
+  }
+
   remove(id: number) {
     return this.carrinhoRepo.delete(id);
   }

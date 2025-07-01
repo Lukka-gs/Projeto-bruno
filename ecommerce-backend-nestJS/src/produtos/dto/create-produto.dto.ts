@@ -10,4 +10,11 @@ export class CreateProdutoDto {
   @IsOptional()
   @IsString()
   descricao?: string;
+
+  @IsNumber()
+  quantidade: number;
+
+  @IsOptional()
+  @IsString()
+  foto?: string;
 }

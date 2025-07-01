@@ -10,6 +10,9 @@ export class CarrinhoDeCompra {
   @CreateDateColumn({ name: 'criado_em' })
   criadoEm: Date;
 
+  @Column({ default: 'aberto' })
+  status: string;
+
   @Column({ nullable: true })
   userId: number;
 

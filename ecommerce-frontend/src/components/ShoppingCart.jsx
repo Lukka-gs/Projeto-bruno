@@ -42,12 +42,11 @@ export default function ShoppingCart({ cart, onRemoveItem }) {
     if (!cart || !cart.id) return;
     setLoading(true);
 
-    fetch(`http://localhost:3001/carrinho-de-compras/${cart.id}`, {
+    fetch(`http://localhost:3001/carrinho-de-compras/${cart.id}/finalizar`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ status: 'finalizado' }),
     })
       .then((response) => {
         if (response.status === 200 || response.status === 204) {

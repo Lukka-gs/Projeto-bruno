@@ -30,6 +30,11 @@ export class CarrinhoDeComprasController {
     return this.carrinhoDeComprasService.update(+id, updateCarrinhoDeCompraDto);
   }
 
+  @Patch(':id/finalizar')
+  finalizar(@Param('id') id: string) {
+    return this.carrinhoDeComprasService.finalize(+id);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.carrinhoDeComprasService.remove(+id);

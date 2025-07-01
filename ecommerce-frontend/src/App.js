@@ -7,9 +7,11 @@ import { AppBar, Toolbar, Typography, Button, Box, Snackbar, Alert } from '@mui/
 import ListProduct from './components/ListProduct.jsx';
 import ShoppingCart from './components/ShoppingCart';
 import RegisterProduct from './components/RegisterProduct.jsx';
+import Login from './components/Login.jsx';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('listProducts');
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));
+  const [currentPage, setCurrentPage] = useState(loggedIn ? 'listProducts' : 'login');
   const [cart, setCart] = useState(null);
   const [selectedProductForEdit, setSelectedProductForEdit] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -17,7 +19,11 @@ function App() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const createShoppingCart = () => {
-    fetch('http://localhost:3001/carrinho-de-compras', { method: 'POST' })
+    const token = localStorage.getItem('token');
+    fetch('http://localhost:3001/carrinho-de-compras', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then(response => {
         if (!response.ok) {
           throw new Error('Falha ao criar carrinho');
@@ -34,7 +40,10 @@ function App() {
   };
 
   const fetchShoppingCart = (cartId) => {
-    fetch(`http://localhost:3001/carrinho-de-compras/${cartId}`)
+    const token = localStorage.getItem('token');
+    fetch(`http://localhost:3001/carrinho-de-compras/${cartId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then(response => {
         if (!response.ok) {
           throw new Error('Falha ao obter carrinho');
@@ -64,11 +73,13 @@ function App() {
       quantidade: 1,
     };
 
+    const token = localStorage.getItem('token');
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify(payload),
       headers: new Headers({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       })
     };
 
@@ -101,8 +112,10 @@ function App() {
       return;
     }
 
+    const token = localStorage.getItem('token');
     const requestOptions = {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
     };
 
     fetch(`http://localhost:3001/carrinho-produtos/${cartItemId}`, requestOptions)
@@ -147,12 +160,21 @@ function App() {
     setSnackbarOpen(false);
   };
 
+  const handleLoggedIn = () => {
+    setLoggedIn(true);
+    setCurrentPage('listProducts');
+  };
+
   useEffect(() => {
-    createShoppingCart();
-  }, []);
+    if (loggedIn) {
+      createShoppingCart();
+    }
+  }, [loggedIn]);
 
   const renderContent = () => {
     switch (currentPage) {
+      case 'login':
+        return <Login onLoggedIn={handleLoggedIn} />;
       case 'listProducts':
         return <ListProduct onAddToCart={handleAddToCartApp} onEditProduct={handleProductEditRequest} />;
       case 'shoppingCart':
@@ -160,7 +182,7 @@ function App() {
       case 'registerProduct':
         return <RegisterProduct selectedProduct={selectedProductForEdit} onProductSaved={handleProductRegisteredOrEdited} />;
       default:
-        return <ListProduct onAddToCart={handleAddToCartApp} onEditProduct={handleProductEditRequest} />;
+        return <Login onLoggedIn={handleLoggedIn} />;
     }
   };
 
@@ -172,18 +194,34 @@ function App() {
             Meu Ecommerce
           </Typography>
 
-          <Button color="inherit" onClick={() => setCurrentPage('listProducts')}>
-            Produtos
-          </Button>
-          <Button color="inherit" onClick={() => setCurrentPage('shoppingCart')}>
-            Meu Carrinho
-          </Button>
-          <Button color="inherit" onClick={() => {
-            setSelectedProductForEdit(null);
-            setCurrentPage('registerProduct');
-          }}>
-            Registrar Produto
-          </Button>
+          {loggedIn && (
+            <>
+              <Button color="inherit" onClick={() => setCurrentPage('listProducts')}>
+                Produtos
+              </Button>
+              <Button color="inherit" onClick={() => setCurrentPage('shoppingCart')}>
+                Meu Carrinho
+              </Button>
+              <Button color="inherit" onClick={() => {
+                setSelectedProductForEdit(null);
+                setCurrentPage('registerProduct');
+              }}>
+                Registrar Produto
+              </Button>
+              <Button color="inherit" onClick={() => {
+                localStorage.removeItem('token');
+                setLoggedIn(false);
+                setCurrentPage('login');
+              }}>
+                Sair
+              </Button>
+            </>
+          )}
+          {!loggedIn && (
+            <Button color="inherit" onClick={() => setCurrentPage('login')}>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 

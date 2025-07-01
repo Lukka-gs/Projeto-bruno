@@ -6,6 +6,8 @@ import { AppService } from './app.service';
 import { ProdutosModule } from './produtos/produtos.module';
 import { CarrinhoDeComprasModule } from './carrinho-de-compras/carrinho-de-compras.module';
 import { CarrinhoProdutosModule } from './carrinho-produtos/carrinho-produtos.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { CarrinhoProdutosModule } from './carrinho-produtos/carrinho-produtos.mo
     ProdutosModule,
     CarrinhoDeComprasModule,
     CarrinhoProdutosModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

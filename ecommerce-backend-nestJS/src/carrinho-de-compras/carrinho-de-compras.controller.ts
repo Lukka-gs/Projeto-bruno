@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CarrinhoDeComprasService } from './carrinho-de-compras.service';
 import { CreateCarrinhoDeCompraDto } from './dto/create-carrinho-de-compra.dto';
 import { UpdateCarrinhoDeCompraDto } from './dto/update-carrinho-de-compra.dto';
@@ -7,9 +8,11 @@ import { UpdateCarrinhoDeCompraDto } from './dto/update-carrinho-de-compra.dto';
 export class CarrinhoDeComprasController {
   constructor(private readonly carrinhoDeComprasService: CarrinhoDeComprasService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body() createCarrinhoDeCompraDto: CreateCarrinhoDeCompraDto) {
-    return this.carrinhoDeComprasService.create(createCarrinhoDeCompraDto);
+  create(@Request() req) {
+    const dto: CreateCarrinhoDeCompraDto = { userId: req.user.userId };
+    return this.carrinhoDeComprasService.create(dto);
   }
 
   @Get()

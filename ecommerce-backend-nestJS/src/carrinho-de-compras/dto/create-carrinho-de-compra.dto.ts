@@ -1,1 +1,3 @@
-export class CreateCarrinhoDeCompraDto {}
+export class CreateCarrinhoDeCompraDto {
+  userId?: number;
+}

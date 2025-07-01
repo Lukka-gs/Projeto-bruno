@@ -58,6 +58,10 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+Upon first startup, the backend checks for a user named `admin` and, if absent,
+creates it automatically with password `senha123`. You can use these credentials
+to log in.
+
 ## Run tests
 
 ```bash

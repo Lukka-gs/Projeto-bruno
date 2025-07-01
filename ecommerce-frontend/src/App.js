@@ -190,9 +190,14 @@ function App() {
     <div className="App">
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Meu Ecommerce
-          </Typography>
+            <img
+              src="/SilhuetaArarinha.png"
+              alt="Logo"
+              style={{ height: 40, marginRight: 16 }}
+            />
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Meu Ecommerce
+            </Typography>
 
           {loggedIn && (
             <>

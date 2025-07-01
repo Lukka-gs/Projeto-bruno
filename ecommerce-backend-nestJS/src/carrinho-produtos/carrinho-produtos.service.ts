@@ -12,8 +12,24 @@ export class CarrinhoProdutosService {
     private readonly carrinhoProdutoRepo: Repository<CarrinhoProduto>,
   ) {}
 
-  create(createCarrinhoProdutoDto: CreateCarrinhoProdutoDto) {
-    const cp = this.carrinhoProdutoRepo.create(createCarrinhoProdutoDto);
+  async create(createCarrinhoProdutoDto: CreateCarrinhoProdutoDto) {
+    const quantidade = createCarrinhoProdutoDto.quantidade ?? 1;
+    const existing = await this.carrinhoProdutoRepo.findOne({
+      where: {
+        carrinhoId: createCarrinhoProdutoDto.carrinhoId,
+        produtoId: createCarrinhoProdutoDto.produtoId,
+      },
+    });
+
+    if (existing) {
+      existing.quantidade += quantidade;
+      return this.carrinhoProdutoRepo.save(existing);
+    }
+
+    const cp = this.carrinhoProdutoRepo.create({
+      ...createCarrinhoProdutoDto,
+      quantidade,
+    });
     return this.carrinhoProdutoRepo.save(cp);
   }
 

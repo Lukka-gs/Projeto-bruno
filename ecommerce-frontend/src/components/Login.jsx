@@ -7,7 +7,7 @@ export default function Login({ onLoggedIn }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:3001/auth/login', {
+    fetch('http://localhost:3002/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
